@@ -1,0 +1,11 @@
+body {
+    background-color: #e9dde6;
+}
+
+.bookshelf {
+    display: flex;
+    position: absolute;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 20px;
+}

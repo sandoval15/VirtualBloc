@@ -16,7 +16,7 @@ export async function transpileToRam() {
             entryPoints: ts,
             bundle: true,
             write: false,
-            outdir: 'FRONTEND/js',
+            outdir: path.join(__dirname, '../js'),
             format: 'esm',
             splitting: true,
             loader: {'.ts': 'ts'},

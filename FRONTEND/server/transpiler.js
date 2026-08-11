@@ -10,7 +10,7 @@ export async function transpileToRam() {
     try {
         let files = await fs.readdir(dir, { withFileTypes: true, recursive: true })
         let ts = files.filter(f => f.isFile()).map(f => path.join(f.parentPath, f.name))
-        console.log('Transpiling files: ', ts)
+        console.log('Transpiling files: ', ts, '\n')
 
         let js = await esbuild.build({
             entryPoints: ts,
@@ -25,7 +25,7 @@ export async function transpileToRam() {
         })
 
         for (let f of js.outputFiles) {
-            console.log(f.path +': '+ f.text +'\n')
+            console.log(f.path +': '+ f.text.split("//#")[0] +'\n')
         }
 
         return js.outputFiles.map(file => ({ path: file.path, code: file.contents }))

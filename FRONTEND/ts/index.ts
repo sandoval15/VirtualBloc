@@ -20,5 +20,5 @@ function bubbleSort(arr: number[]): number[] {
 const numerosDesordenados: number[] = [64, 34, 25, 12, 22, 11, 90];
 const numerosOrdenados = bubbleSort(numerosDesordenados);
 
-console.log("Original:", numerosDesordenados);
-console.log("Ordenado con Burbuja:", numerosOrdenados);
+console.log("Original hola:", numerosDesordenados);
+console.log("BBBBBBBBBBBBBBB:", numerosOrdenados);

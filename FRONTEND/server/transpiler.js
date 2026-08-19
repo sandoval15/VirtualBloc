@@ -1,5 +1,5 @@
 import esbuild from 'esbuild';
-import fs from 'node:fs/promises';
+import fs from 'node:fs'
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -8,17 +8,15 @@ const dir = path.join(__dirname, '../ts')
 
 export async function transpileToRam() {
     try {
-        let files = await fs.readdir(dir, { withFileTypes: true, recursive: true })
+        let files = fs.readdirSync(dir, { withFileTypes: true, recursive: true })
         let ts = files.filter(f => f.isFile()).map(f => path.join(f.parentPath, f.name))
         console.log('Transpiling files: ', ts, '\n')
 
         let js = await esbuild.build({
             entryPoints: ts,
-            bundle: true,
             write: false,
             outdir: path.join(__dirname, '../js'),
             format: 'esm',
-            splitting: true,
             loader: {'.ts': 'ts'},
             minify: true,
             sourcemap: 'inline'
@@ -29,6 +27,25 @@ export async function transpileToRam() {
         }
 
         return js.outputFiles.map(file => ({ path: file.path, code: file.contents }))
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export function reTranspile(file) {
+    try {
+        let ts = path.join(dir, file)
+        let js = esbuild.buildSync({
+            entryPoints: [ts],
+            write: false,
+            outdir: path.join(__dirname, '../js'),
+            format: 'esm',
+            loader: {'.ts': 'ts'},
+            minify: true,
+            sourcemap: 'inline'
+        })
+
+        return js.outputFiles[0].contents
     } catch (error) {
         console.log(error)
     }

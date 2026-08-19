@@ -1,6 +1,6 @@
 import http from 'node:http';
 import fs from 'node:fs';
-import { transpileToRam } from './transpiler.js';
+import { transpileToRam, reTranspile } from './transpiler.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -13,33 +13,47 @@ let js = await transpileToRam()
 
 const server = http.createServer((req, res) => {
     const { url, method } = req
-    if (url === '/' && method === 'GET') {
-        res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
-        let html = fs.readFileSync(path.join(__dirname, '../main.html'), 'utf-8')
-        res.end(html);
-        return;
-    }
-
-    if (url.endsWith('.css') && method === 'GET') {
-        res.writeHead(200, { 'Content-Type': 'text/css; charset=utf-8' });
-        let dir = path.join(__dirname, `..${url}`)
-        let css = fs.readFileSync(dir, 'utf-8')
-        res.end(css);
-        return;
-    }
-
-    if (url.endsWith('.js') && method === 'GET') {
-        res.writeHead(200, { 'Content-Type': 'text/javascript; charset=utf-8' });
-        let dir = path.join(__dirname, `..${url}`)
-        console.log('Requesting JS file: ', dir)
-        if (fs.existsSync(dir)) {
-            let code = fs.readFileSync(dir, 'utf-8')
-            res.end(code);
-            return;
+    if (method === 'GET') {
+        if (url.split('?')[0] === '/retranspile') {
+            res.writeHead(200, { 'Content-Type': 'charset=utf-8' });
+            let file = new URL(url, "http://localhost:3000").searchParams.get("file").toString()
+            let dir = path.join(__dirname, '../js')
+            js.forEach(f => {
+                if (f.path === path.join(dir, file.replace('.ts', '.js'))) {
+                    f.code = Buffer.from(reTranspile(file))
+                }
+            })
+            res.end("ok")
+            return
         }
-        let code = js.find(f => dir === f.path).code
-        res.end(Buffer.from(code));
-        return;
+        if (url === '/') {
+            res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+            let html = fs.readFileSync(path.join(__dirname, '../main.html'), 'utf-8')
+            res.end(html)
+            return
+        }
+
+        if (url.endsWith('.css')) {
+            res.writeHead(200, { 'Content-Type': 'text/css; charset=utf-8' });
+            let dir = path.join(__dirname, `..${url}`)
+            let css = fs.readFileSync(dir, 'utf-8')
+            res.end(css)
+            return
+        }
+
+        if (url.endsWith('.js')) {
+            res.writeHead(200, { 'Content-Type': 'text/javascript; charset=utf-8' });
+            let dir = path.join(__dirname, `..${url}`)
+            console.log('Requesting JS file: ', dir)
+            if (fs.existsSync(dir)) {
+                let code = fs.readFileSync(dir, 'utf-8')
+                res.end(code)
+                return
+            }
+            let code = js.find(f => dir === f.path).code
+            res.end(Buffer.from(code))
+            return
+        }
     }
 })
 

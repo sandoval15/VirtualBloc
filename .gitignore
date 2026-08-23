@@ -9,3 +9,10 @@ CLAUDE.md
 
 # --- SECRETOS
 .env
+
+# --- EXTENSIONES C (artefactos de compilacion)
+*.pyd
+*.o
+*.obj
+*.exp
+*.lib

@@ -21,7 +21,7 @@ func GetHojas(con *sql.DB, w http.ResponseWriter, r *http.Request) {
 
 	rows, err := con.Query("select * from hoja where libro = ?", libro)
 	if err != nil {
-		http.Error(w, "Error al consultar: " + err.Error(), http.StatusInternalServerError)
+		http.Error(w, "Error al consultar: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
 
@@ -32,7 +32,7 @@ func GetHojas(con *sql.DB, w http.ResponseWriter, r *http.Request) {
 	for rows.Next() {
 		var h Hoja
 		if err := rows.Scan(&h.ID, &h.Libro, &h.Numero, &h.Texto); err != nil {
-			http.Error(w, "Error al leer los datos: " + err.Error(), http.StatusInternalServerError)
+			http.Error(w, "Error al leer los datos: "+err.Error(), http.StatusInternalServerError)
 			return
 		}
 		hojas = append(hojas, h)
@@ -70,7 +70,6 @@ func SaveHojas(con *sql.DB, w http.ResponseWriter, r *http.Request) {
 	}
 
 	defer e.Close()
-
 
 	for _, h := range hojas {
 		if _, err := e.Exec(h.ID, h.Libro, h.Numero, h.Texto); err != nil {

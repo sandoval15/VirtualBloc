@@ -3,3 +3,9 @@ FRONTEND/node_modules/
 
 # --- CLI
 .venv/
+
+# --- CLAUDE
+CLAUDE.md
+
+# --- SECRETOS
+.env

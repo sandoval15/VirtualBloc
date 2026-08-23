@@ -1,0 +1,8 @@
+# A produccion solo llega lo que necesita el entorno serverless.
+# El toolchain de desarrollo vive solo en local y en el repo.
+
+# --- ESQUEMA DE LA BD (recurso del repo)
+virtualblocdb.sql
+
+# --- SERVER DE DESARROLLO
+server/

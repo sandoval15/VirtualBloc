@@ -1,0 +1,15 @@
+# A produccion solo llega el sitio estatico, ya transpilado.
+# Todo el toolchain de desarrollo se queda en local y en el repo.
+# node_modules, .git, .gitignore y .vercel los excluye Vercel por su cuenta.
+
+# --- FUENTES Y TOOLCHAIN
+ts/
+server/
+tsconfig.json
+package.json
+pnpm-lock.yaml
+pnpm-workspace.yaml
+
+# --- SECRETOS
+# Ojo: Vercel solo ignora .env.local y .env.*.local por defecto, .env NO.
+.env

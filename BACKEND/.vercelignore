@@ -3,3 +3,7 @@
 
 # --- ESQUEMA DE LA BD (recurso del repo)
 virtualblocdb.sql
+
+# --- SECRETOS
+# Ojo: Vercel solo ignora .env.local y .env.*.local por defecto, .env NO.
+.env

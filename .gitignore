@@ -16,3 +16,6 @@ CLAUDE.md
 *.obj
 *.exp
 *.lib
+
+# --- VERCEL (lo crea `vercel link`, es local)
+.vercel/

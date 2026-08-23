@@ -2,7 +2,7 @@ import subprocess
 
 def main():
     subprocess.Popen("uv run watcher.py", text=True)
-    runServer("go run", "backend/server/local-server.go")
+    runServer("go run", "backend/main.go")
     runServer("node", "frontend/server/local-server.js")
 
 def runServer(cmd: str, dir:str):

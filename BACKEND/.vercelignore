@@ -3,6 +3,3 @@
 
 # --- ESQUEMA DE LA BD (recurso del repo)
 virtualblocdb.sql
-
-# --- SERVER DE DESARROLLO
-server/

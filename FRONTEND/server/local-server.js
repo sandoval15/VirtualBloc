@@ -9,6 +9,11 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PORT = 3000
 const HOST = 'localhost'
 
+const notFound = (res) => {
+    res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
+    res.end('404 - No encontrado')
+}
+
 let js = await transpileToRam()
 
 const server = http.createServer((req, res) => {
@@ -34,27 +39,40 @@ const server = http.createServer((req, res) => {
         }
 
         if (url.endsWith('.css')) {
-            res.writeHead(200, { 'Content-Type': 'text/css; charset=utf-8' });
             let dir = path.join(__dirname, `..${url}`)
+            if (!fs.existsSync(dir)) {
+                console.log('CSS file not found: ', dir)
+                notFound(res)
+                return
+            }
+            res.writeHead(200, { 'Content-Type': 'text/css; charset=utf-8' });
             let css = fs.readFileSync(dir, 'utf-8')
             res.end(css)
             return
         }
 
         if (url.endsWith('.js')) {
-            res.writeHead(200, { 'Content-Type': 'text/javascript; charset=utf-8' });
             let dir = path.join(__dirname, `..${url}`)
             console.log('Requesting JS file: ', dir)
             if (fs.existsSync(dir)) {
+                res.writeHead(200, { 'Content-Type': 'text/javascript; charset=utf-8' });
                 let code = fs.readFileSync(dir, 'utf-8')
                 res.end(code)
                 return
             }
-            let code = js.find(f => dir === f.path).code
-            res.end(Buffer.from(code))
+            let file = js.find(f => dir === f.path)
+            if (!file) {
+                console.log('JS file not found on disk or in RAM: ', dir)
+                notFound(res)
+                return
+            }
+            res.writeHead(200, { 'Content-Type': 'text/javascript; charset=utf-8' });
+            res.end(Buffer.from(file.code))
             return
         }
     }
+
+    notFound(res)
 })
 
 server.listen(PORT, HOST, () => {

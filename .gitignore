@@ -9,6 +9,7 @@ CLAUDE.md
 
 # --- SECRETOS
 .env
+.env*.local
 
 # --- EXTENSIONES C (artefactos de compilacion)
 *.pyd

@@ -27,7 +27,7 @@ func GetHojas(con *sql.DB, w http.ResponseWriter, r *http.Request) {
 
 	defer rows.Close()
 
-	var hojas []Hoja
+	hojas := []Hoja{}
 
 	for rows.Next() {
 		var h Hoja
